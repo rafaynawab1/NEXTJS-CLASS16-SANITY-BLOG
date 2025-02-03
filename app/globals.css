@@ -2,20 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #4f46e5; /* Indigo */
+  --secondary-color: #ec4899; /* Pink */
+  --text-light: #374151; /* Gray-700 */
+  --text-dark: #e5e7eb; /* Gray-200 */
+  --bg-light: #ffffff; /* White */
+  --bg-dark: #1f2937; /* Gray-800 */
 }
 
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --primary-color: #6366f1; /* Lighter Indigo */
+    --secondary-color: #f472b6; /* Lighter Pink */
+    --text-light: #e5e7eb; /* Gray-200 */
+    --text-dark: #374151; /* Gray-700 */
+    --bg-light: #111827; /* Gray-900 */
+    --bg-dark: #1f2937; /* Gray-800 */
   }
 }
 
+/* Global Styling */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300;
+  font-family: 'Inter', sans-serif;
 }
+
+/* Blog Card Styling */
+.blog-card {
+  @apply p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 shadow-lg hover:shadow-xl transition-shadow duration-300;
+}
+
+
+.blog-card p {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+.blog-card:hover {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+/* Button Styling */
+.btn {
+  @apply px-4 py-2 rounded-lg text-white font-semibold transition-all duration-300;
+}
+
+
+
