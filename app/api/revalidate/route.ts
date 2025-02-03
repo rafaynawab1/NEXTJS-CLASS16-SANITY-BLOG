@@ -24,8 +24,15 @@ export async function POST(req: NextRequest) {
       now: Date.now(),
       body,
     });
-  } catch (error: any) {
-    console.error(error);
-    return new Response(error.message, { status: 500 });
+  } catch (error: unknown) {
+    // Narrow down the error type to handle it
+    if (error instanceof Error) {
+      console.error(error.message);
+      return new Response(error.message, { status: 500 });
+    } else {
+      // Handle cases where the error is not an instance of Error
+      console.error("Unknown error:", error);
+      return new Response("An unknown error occurred", { status: 500 });
+    }
   }
 }

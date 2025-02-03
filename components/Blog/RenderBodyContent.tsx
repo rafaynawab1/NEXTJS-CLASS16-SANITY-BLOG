@@ -1,6 +1,6 @@
 import config from "../../sanity/config/client-config";
-import { Blog } from "../../types/blog";
-import { PortableText } from "@portabletext/react";
+import { Blog } from "../../types/blog"; // Ensure the Blog type is correct
+import { PortableText, PortableTextBlock } from "@portabletext/react";
 import { getImageDimensions } from "@sanity/asset-utils";
 import urlBuilder from "@sanity/image-url";
 import Image from "next/image";
@@ -8,9 +8,36 @@ import Image from "next/image";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-// lazy-loaded image component
-const ImageComponent = ({ value, isInline }: any) => {
-  const { width, height } = getImageDimensions(value);
+// Define proper types for the components
+
+// Image component props
+interface ImageValue {
+  alt?: string;
+  asset: {
+    _ref: string; // Sanity asset reference
+  };
+  width: number;
+  height: number;
+}
+
+// Code component props
+interface CodeValue {
+  language: string;
+  code: string;
+}
+
+// Table component props
+interface TableRow {
+  _key: string;
+  cells: string[];
+}
+
+interface TableValue {
+  rows: TableRow[];
+}
+
+const ImageComponent = ({ value, isInline }: { value: ImageValue; isInline: boolean }) => {
+  const { width, height } = getImageDimensions(value.asset); 
   return (
     <div className="my-10 overflow-hidden rounded-[15px]">
       <Image
@@ -34,7 +61,7 @@ const ImageComponent = ({ value, isInline }: any) => {
   );
 };
 
-const Code = ({ value }: any) => {
+const Code = ({ value }: { value: CodeValue }) => {
   return (
     <div className="my-10">
       <SyntaxHighlighter language={value.language} style={dracula}>
@@ -44,18 +71,15 @@ const Code = ({ value }: any) => {
   );
 };
 
-const Table = ({ value }: any) => {
+const Table = ({ value }: { value: TableValue }) => {
   return (
     <div className="my-10">
       <table>
         <tbody>
-          {value.rows.map((row: any) => (
+          {value.rows.map((row) => (
             <tr key={row._key}>
-              {row.cells.map((cell: any, key: any) => (
-                <td
-                  key={key}
-                  className="first-of-type:bg-gray-100 max-w-[100px]"
-                >
+              {row.cells.map((cell, key) => (
+                <td key={key} className="first-of-type:bg-gray-100 max-w-[100px]">
                   <span className="px-4">{cell}</span>
                 </td>
               ))}
@@ -75,10 +99,11 @@ const components = {
   },
 };
 
+// Define the RenderBodyContent component with proper typing
 const RenderBodyContent = ({ post }: { post: Blog }) => {
   return (
     <>
-      <PortableText value={post?.body as any} components={components} />
+      <PortableText value={post?.body as PortableTextBlock[]} components={components} />
     </>
   );
 };
